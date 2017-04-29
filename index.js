@@ -16,6 +16,7 @@ const api = new ParseServer({
     cloud: process.env.CLOUD_CODE_MAIN || __dirname + '/cloud/main.js',
     appId: process.env.APP_ID || 'rekindr',
     masterKey: process.env.MASTER_KEY || '', //Add your master key here. Keep it secret!
+    serverURL: process.env.SERVER_URL || 'https://localhost:1337'
     // liveQuery: {
     //     classNames: ["Posts", "Comments"] // List of classes to support for query subscriptions
     // }
@@ -34,7 +35,7 @@ const ALLOW_INSECURE_HTTP = false;
 const dashboard = new ParseDashboard({
     apps: [
         {
-            serverURL: process.env.SERVER_URL || 'https://localhost:1337/parse',
+            serverURL: process.env.SERVER_URL || 'https://localhost:1337',
             appId: process.env.APP_ID || 'rekindr',
             masterKey: process.env.MASTER_KEY || '',
             appName: "Rekindr"
