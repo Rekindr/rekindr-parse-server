@@ -18,13 +18,9 @@ Parse.Cloud.define("uploadPhoto", (req, res) => {
             let tag = new PhotoBabyTag();
             tag.set('baby', Baby.createWithoutData(babyId));
             tag.set('photo', savedPhoto);
-            tag.set('faceLeft', babies[babyId][0]);
-            tag.set('faceTop', babies[babyId][1]);
-            tag.set('faceRight', babies[babyId][2]);
-            tag.set('faceBottom', babies[babyId][3]);
+            tag.set('faceBox', req.params.babies[babyId]);
             return tag;
         });
-        console.log("tags", tags);
         return Parse.Promise.when(tags.map(tag => tag.save()));
     }).then(() => res.success(photo));
 })
