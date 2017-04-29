@@ -1,0 +1,27 @@
+{
+  "name": "rekindr-parse-server",
+  "version": "1.0.0",
+  "description": "Parse back-end for Rekindr app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rekindr/rekindr-parse-server.git"
+  },
+  "keywords": [
+    "rekindr"
+  ],
+  "author": "Mai Anh Vu <me@maianhvu.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Rekindr/rekindr-parse-server/issues"
+  },
+  "homepage": "https://github.com/Rekindr/rekindr-parse-server#readme",
+  "dependencies": {
+    "express": "^4.15.2",
+    "parse": "^1.9.2",
+    "parse-server": "^2.3.8"
+  }
+}
