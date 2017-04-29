@@ -24,6 +24,7 @@ Parse.Cloud.define("uploadPhoto", (req, res) => {
             tag.set('faceBottom', babies[babyId][3]);
             return tag;
         });
+        console.log("tags", tags);
         return Parse.Promise.when(tags.map(tag => tag.save()));
     }).then(() => res.success(photo));
 })
