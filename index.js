@@ -31,7 +31,7 @@ app.use('/public', express.static(path.join(__dirname, '/public')));
 const MOUNT_PATH = process.env.PARSE_MOUNT || '/parse';
 app.use(MOUNT_PATH, api);
 
-const ALLOW_INSECURE_HTTP = false;
+const ALLOW_INSECURE_HTTP = true;
 const dashboard = new ParseDashboard({
     apps: [
         {
