@@ -40,7 +40,14 @@ const dashboard = new ParseDashboard({
             masterKey: process.env.MASTER_KEY || '',
             appName: "Rekindr"
         }
-    ]
+    ],
+    users: [
+        {
+            user: process.env.PARSE_USERNAME,
+            pass: process.env.PARSE_PASSWORD
+        }
+    ],
+    useEncryptedPasswords: true
 }, ALLOW_INSECURE_HTTP);
 
 const DASHBOARD_PATH = process.env.PARSE_DASHBOARD || '/dashboard';
