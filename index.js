@@ -2,6 +2,7 @@
 // compatible API routes.
 const express = require('express');
 const { ParseServer } = require('parse-server');
+const ParseDashboard = require('parse-dashboard');
 const path = require('path');
 
 const DATABASE_URI = process.env.DATABASE_URI || process.env.MONGODB_URI;
@@ -28,6 +29,21 @@ app.use('/public', express.static(path.join(__dirname, '/public')));
 // Serve the Parse API on the /parse URL prefix
 const MOUNT_PATH = process.env.PARSE_MOUNT || '/parse';
 app.use(MOUNT_PATH, api);
+
+const ALLOW_INSECURE_HTTP = false;
+const dashboard = new ParseDashboard({
+    apps: [
+        {
+            serverURL: process.env.SERVER_URL || 'https://localhost:1337/parse',
+            appId: process.env.APP_ID || 'rekindr',
+            masterKey: process.env.MASTER_KEY || '',
+            appName: "Rekindr"
+        }
+    ]
+}, ALLOW_INSECURE_HTTP);
+
+const DASHBOARD_PATH = process.env.PARSE_DASHBOARD || '/dashboard';
+app.use(DASHBOARD_PATH, dashboard);
 
 // Parse Server plays nicely with the rest of your web routes
 app.get('/', (req, res) => {
