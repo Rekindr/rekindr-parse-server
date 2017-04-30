@@ -33,6 +33,8 @@ Parse.Cloud.define("getNewsFeed", (req, res) => {
         let babies = results.reduce((a, v) => a.concat(v), []);
         return new Parse.Query(PhotoBabyTag).containedIn('baby', babies)
             .include('photo')
+            .include('photo.uploader')
+            .include('photo.uploader.profile')
             .include('baby')
             .limit(30).find();
     }).then(tags => {
