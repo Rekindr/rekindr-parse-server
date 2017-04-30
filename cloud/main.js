@@ -10,6 +10,12 @@ Parse.Cloud.define("getBabies", (req, res) => {
     babyQuery.find().then(babies => res.success(babies));
 });
 
+Parse.Cloud.define("getFamilies", (req, res) => {
+    new Parse.Query(Family).equalTo('members', req.user).find()
+        .then(families => res.success(families))
+        .fail(err => res.error(err));
+});
+
 Parse.Cloud.define("uploadPhoto", (req, res) => {
     let photo = new Photo();
     photo.set('caption', req.params.caption);
