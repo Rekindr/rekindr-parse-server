@@ -10,10 +10,22 @@ Parse.Cloud.define("getBabies", (req, res) => {
     babyQuery.find().then(babies => res.success(babies));
 });
 
-Parse.Cloud.define("getFamilies", (req, res) => {
-    new Parse.Query(Family).equalTo('members', req.user).find()
-        .then(families => res.success(families))
-        .fail(err => res.error(err));
+Parse.Cloud.define("getFamilyMembers", (req, res) => {
+    new Parse.Query(Family).equalTo('members', req.user).find().then(families => {
+        return Parse.Promise.when(families.map(family => family.get('members').query().find()));
+    }).then(results => {
+        let users = results.reduce((a, v) => a.concat(v), []) // Aggregate results across queries
+            .sort((a, b) => a.id.localeCompare(b.id)) // Sort them so that we can find unique members
+            .reduce((a, v) => { // Select out adjacent members of different IDs
+            if (a.length === 0 || a[a.length - 1].id !== v.id) {
+                a.push(v);
+            }
+            return a;
+            }, [])
+            // Does not return self
+            .filter(user => user.id !== req.user.id)
+        res.success(users);
+    }).fail(err => res.error(err));
 });
 
 Parse.Cloud.define("uploadPhoto", (req, res) => {
