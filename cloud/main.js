@@ -3,6 +3,7 @@ const Baby = Parse.Object.extend("Baby");
 const Photo = Parse.Object.extend("Photo");
 const PhotoBabyTag = Parse.Object.extend("PhotoBabyTag");
 const Family = Parse.Object.extend("Family");
+const Album = Parse.Object.extend("Album");
 
 Parse.Cloud.define("getBabies", (req, res) => {
     let babyQuery = new Parse.Query(Baby).equalTo('parent', req.user);
@@ -53,4 +54,34 @@ Parse.Cloud.define("getNewsFeed", (req, res) => {
             .sort((a, b) => b.photo.get('createdAt') - a.photo.get('createdAt'));
         res.success(result);
     }).fail(err => res.error(err));
+});
+
+Parse.Cloud.define('createNewAlbum', (req, res) => {
+    if (!req.params.hasOwnProperty('name')) {
+        res.error("Missing parameters");
+    } else {
+        let album = new Album();
+        album.set('name', req.params.name);
+        album.set('createdBy', req.user);
+        album.save().then(result => res.success(result));
+    }
+});
+
+Parse.Cloud.define('getAlbums', (req, res) => {
+   new Parse.Query(Album).equalTo('createdBy', req.user).find()
+       .then(albums => res.success(albums))
+       .fail(err => res.error(err));
+});
+
+Parse.Cloud.define('addPhotosToAlbum', (req, res) => {
+    if (!req.params.hasOwnProperty('photoIds') ||
+        !req.params.hasOwnProperty('albumId')) {
+
+        res.error("Missing parameters");
+    } else {
+        new Parse.Query(Album).equalTo('objectId', req.params.albumId).first().then(album => {
+            album.get('photos').add(req.params.photoIds.map(id => Photo.createWithoutData(id)));
+            res.success(album);
+        }).fail(err => res.error(err));
+    }
 });
