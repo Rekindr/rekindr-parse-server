@@ -97,10 +97,12 @@ Parse.Cloud.define('addPhotosToAlbum', (req, res) => {
 
         res.error("Missing parameters");
     } else {
-        let albumQuery = new Parse.Query(Album).equalTo('objectId', req.params.albumId);
-        let photosQuery = new Parse.Query(Photo).containedIn('objectId', req.params.photoIds);
-        new Parse.Promise.when(albumQuery.first(), photosQuery.find()).then((album, photos) => {
-            album.get('photos').add(photos);
+        new Parse.Query(Album).get(req.params.albumId).then(album => {
+            album.relation('photos').add(
+                req.params.photoIds.map(photoId => Photo.createWithoutData(photoId))
+            );
+            return album.save();
+        }).then(album => {
             res.success(album);
         }).fail(err => res.error(err));
     }
