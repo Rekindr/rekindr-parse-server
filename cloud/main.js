@@ -124,3 +124,17 @@ Parse.Cloud.define('removePhotosFromAlbum', (req, res) => {
         }).fail(err => res.error(err));
     }
 });
+
+Parse.Cloud.define('renameAlbum', (req, res) => {
+    if (!req.params.hasOwnProperty('albumId') ||
+        !req.params.hasOwnProperty('name')) {
+
+        res.error("Missing parameters");
+    } else {
+        new Parse.Query(Album).get(req.params.albumId).then(album => {
+            album.set('name', req.params.name);
+            return album.save();
+        }).then(album => res.success(album))
+            .fail(err => res.error(err));
+    }
+})
