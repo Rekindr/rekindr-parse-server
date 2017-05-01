@@ -99,7 +99,7 @@ Parse.Cloud.define('addPhotosToAlbum', (req, res) => {
     } else {
         let albumQuery = new Parse.Query(Album).equalTo('objectId', req.params.albumId);
         let photosQuery = new Parse.Query(Photo).containedIn('objectId', req.params.photoIds);
-        new Parse.Promise.when(albumQuery.first(), photosQuery.find()).then(album, photos => {
+        new Parse.Promise.when(albumQuery.first(), photosQuery.find()).then((album, photos) => {
             album.get('photos').add(photos);
             res.success(album);
         }).fail(err => res.error(err));
