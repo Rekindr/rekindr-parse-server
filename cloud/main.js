@@ -80,6 +80,22 @@ Parse.Cloud.define("getNewsFeed", (req, res) => {
     }).fail(err => res.error(err));
 });
 
+Parse.Cloud.define('getMemoriesPhotos', (req, res) => {
+    let user = req.params.hasOwnProperty('userId') ?
+        User.createWithoutData(req.params.userId) :
+        req.user;
+    if (!user) {
+        res.error("Unauthorized");
+    } else {
+        new Parse.Query(Photo)
+            .equalTo('uploader', user)
+            .descending('createdAt')
+            .find()
+            .then(photos => res.success(photos))
+            .fail(err => res.error(err));
+    }
+});
+
 Parse.Cloud.define('createNewAlbum', (req, res) => {
     if (!req.params.hasOwnProperty('name')) {
         res.error("Missing parameters");
