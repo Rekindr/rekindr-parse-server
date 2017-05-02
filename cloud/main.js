@@ -1,4 +1,5 @@
 // Class definitions
+const User = Parse.Object.extend("_User");
 const Baby = Parse.Object.extend("Baby");
 const Photo = Parse.Object.extend("Photo");
 const PhotoBabyTag = Parse.Object.extend("PhotoBabyTag");
@@ -6,8 +7,13 @@ const Family = Parse.Object.extend("Family");
 const Album = Parse.Object.extend("Album");
 
 Parse.Cloud.define("getBabies", (req, res) => {
-    let babyQuery = new Parse.Query(Baby).equalTo('parent', req.user);
-    babyQuery.find().then(babies => res.success(babies));
+    let user = req.params.hasOwnProperty('userId') ? User.createWithoutData(req.params.userId) : req.user;
+    if (!user) {
+        res.error("Unauthorized");
+    } else {
+        let babyQuery = new Parse.Query(Baby).equalTo('parent', user);
+        babyQuery.find().then(babies => res.success(babies));
+    }
 });
 
 Parse.Cloud.define("getFamilyMembers", (req, res) => {
@@ -86,9 +92,16 @@ Parse.Cloud.define('createNewAlbum', (req, res) => {
 });
 
 Parse.Cloud.define('getAlbums', (req, res) => {
-   new Parse.Query(Album).equalTo('createdBy', req.user).find()
-       .then(albums => res.success(albums))
-       .fail(err => res.error(err));
+    let user = req.params.hasOwnProperty('userId') ?
+        User.createWithoutData(req.params.userId) :
+        req.user;
+    if (!user) {
+        res.error('Unauthorized');
+    } else {
+        new Parse.Query(Album).equalTo('createdBy', user).find()
+            .then(albums => res.success(albums))
+            .fail(err => res.error(err));
+    }
 });
 
 Parse.Cloud.define('addPhotosToAlbum', (req, res) => {
