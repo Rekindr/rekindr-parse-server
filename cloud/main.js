@@ -180,3 +180,19 @@ Parse.Cloud.define('favoritePhoto', (req, res) => {
             .fail(err => res.error(err));
     }
 });
+
+Parse.Cloud.define('createAlbumWithPhotos', (req, res) => {
+    if (!req.params.hasOwnProperty('name') ||
+        !req.params.hasOwnProperty('photoIds')) {
+
+        res.error("Missing parameters");
+    } else {
+        let album = new Album();
+        album.set('name', req.params.name);
+        album.set('createdBy', req.user);
+        album.relation('photos').add(
+            req.params.photoIds.map(photoId => Photo.createWithoutData(photoId))
+        );
+        album.save().then(result => res.success(result));
+    }
+});
