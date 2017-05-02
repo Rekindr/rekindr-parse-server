@@ -166,10 +166,10 @@ Parse.Cloud.define('renameAlbum', (req, res) => {
         }).then(album => res.success(album))
             .fail(err => res.error(err));
     }
-})
+});
 
 Parse.Cloud.define('favoritePhoto', (req, res) => {
-    if (!req.params.hasOwnProperty('photoId')  {
+    if (!req.params.hasOwnProperty('photoId'))  {
 
         res.error("Missing parameters");
     } else {
@@ -179,4 +179,4 @@ Parse.Cloud.define('favoritePhoto', (req, res) => {
         }).then(album => res.success(album))
             .fail(err => res.error(err));
     }
-})
+});
