@@ -39,7 +39,7 @@ Parse.Cloud.define("uploadPhoto", (req, res) => {
     photo.set('caption', req.params.caption);
     photo.set('original', req.params.original);
     photo.set('uploader', req.user);
-    photo.set('favorite', req.favorite);
+    photo.set('favorite', req.params.favorite);
     photo.save().then(savedPhoto => {
         let tags = Object.keys(req.params.babies).map(babyId => {
             let tag = new PhotoBabyTag();
